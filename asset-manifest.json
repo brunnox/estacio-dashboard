@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/estacio-dashboard/static/css/main.f855e6bc.css",
+    "main.js": "/estacio-dashboard/static/js/main.14e5cfc7.js",
+    "static/js/453.e2c2261d.chunk.js": "/estacio-dashboard/static/js/453.e2c2261d.chunk.js",
+    "index.html": "/estacio-dashboard/index.html",
+    "main.f855e6bc.css.map": "/estacio-dashboard/static/css/main.f855e6bc.css.map",
+    "main.14e5cfc7.js.map": "/estacio-dashboard/static/js/main.14e5cfc7.js.map",
+    "453.e2c2261d.chunk.js.map": "/estacio-dashboard/static/js/453.e2c2261d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.14e5cfc7.js"
+  ]
+}
