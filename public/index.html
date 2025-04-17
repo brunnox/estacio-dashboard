@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
@@ -11,34 +11,81 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
-
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
     <title>React App</title>
+    <style>
+      /* Garante que o App fique oculto até autenticar */
+      #root { display: none; }
+    </style>
   </head>
-  <body>
+  <body class="antialiased bg-gray-100">
     <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <!-- Login Overlay -->
+    <div id="login" class="fixed inset-0 flex items-center justify-center bg-white z-50">
+      <form id="loginForm" class="bg-white p-8 rounded-lg shadow-lg w-full max-w-sm">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Faça login</h2>
+        <input
+          type="password"
+          id="password"
+          placeholder="Senha"
+          required
+          autofocus
+          class="w-full px-4 py-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Entrar
+        </button>
+      </form>
+    </div>
+
+    <!-- React root -->
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+    <!-- Login script -->
+    <script>
+      // Substitua pelo SHA‑256 da sua senha
+      const PASSWORD_HASH = '55c5db7beec4434f518b7d97cdba1009783921393f25c1fbcd63343ae130fd81';
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+      function buf2hex(buffer) {
+        return [...new Uint8Array(buffer)]
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('');
+      }
+
+      async function sha256(str) {
+        const buf = new TextEncoder().encode(str);
+        const hash = await crypto.subtle.digest('SHA-256', buf);
+        return buf2hex(hash);
+      }
+
+      function showApp() {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('root').style.display = 'block';
+      }
+
+      // Se já autorizou antes, exibe diretamente
+      if (localStorage.getItem('authorized') === 'true') {
+        showApp();
+      }
+
+      document.getElementById('loginForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        const pwd = document.getElementById('password').value;
+        const hash = await sha256(pwd);
+        if (hash === PASSWORD_HASH) {
+          localStorage.setItem('authorized', 'true');
+          showApp();
+        } else {
+          alert('Senha incorreta.');
+          document.getElementById('password').value = '';
+        }
+      });
+    </script>
+
+    <!-- CRA injecta seus scripts de build aqui -->
   </body>
 </html>
